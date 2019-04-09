@@ -3,20 +3,80 @@
 Learn how to deploy an application to a Kubernetes cluster hosted within
 the IBM Container Service.
 
-# 0. Install Prerequisite CLIs and Provision a Kubernetes Cluster
+# 0. Log into the IBM Kubernetes Cluster
 
-If you haven't already:
-1. Install the IBM Cloud CLIs and login, as described in [Lab 0](../Lab0/README.md).
-2. Provision a cluster:
+1. Log into IBM Cloud.
 
-   ```$ ibmcloud cs cluster-create --name <name-of-cluster>```
+Use the credentials you got from the lab instrcutor to log into the client VM.
 
-Once the cluster is provisioned, the kubernetes client CLI `kubectl` needs to be
-configured to talk to the provisioned cluster.
+Once logged in, connect to IBM Cloud and your kubernetes clusters as shown in the list of commands below:
 
-1. Run `$ ibmcloud cs cluster-config <name-of-cluster>`, and set the `KUBECONFIG`
-   environment variable based on the output of the command. This will
-   make your `kubectl` client point to your new Kubernetes cluster.
+```
+ibmcloud login
+API endpoint: https://cloud.ibm.com
+
+Email> rojanjose@gmail.com
+
+Password> 
+Authenticating...
+OK
+
+Select an account:
+1. Rojan Jose's Account (63431c2ec26fd49d6b5asdfsd32e629c3d)
+2. DBG PoC Account - Multiple Clients (bda3b5ea09b5c9cb909067cd839e95c2) <-> 1620097
+Enter a number> 2
+Targeted account DBG PoC Account - Multiple Clients (bda3b5ea09b5c9cb909067cd839e95c2) <-> 1620097
+
+
+Select a region (or press enter to skip):
+1. au-syd
+2. jp-tok
+3. eu-de
+4. eu-gb
+5. us-south
+6. us-east
+Enter a number> 6
+Targeted region us-east
+
+                      
+API endpoint:      https://cloud.ibm.com   
+Region:            us-east   
+User:              rojanjose@gmail.com   
+Account:           DBG PoC Account - Multiple Clients (bda3b5ea09b5c9cb909067cd839e95c2) <-> 1620097   
+Resource group:    No resource group targeted, use 'ibmcloud target -g RESOURCE_GROUP'   
+CF API endpoint:      
+Org:                  
+Space:                
+
+Tip: If you are managing Cloud Foundry applications and services
+- Use 'ibmcloud target --cf' to target Cloud Foundry org/space interactively, or use 'ibmcloud target --cf-api ENDPOINT -o ORG -s SPACE' to target the org/space.
+- Use 'ibmcloud cf' if you want to run the Cloud Foundry CLI with current IBM Cloud CLI context.
+```
+
+2. Connect and use the cluster:
+
+List the clusters and locate the cluster corresponding to the userId you used to login to the console-in-a-browser environment. For example, if you are user028, your cluster will be user028-cluster.
+
+```
+~$ ibmcloud ks clusters
+
+OK
+Name              ID                                 State    Created      Workers   Location          Version       Resource Group Name   
+user001-cluster   707f162b19cc4c3bbb28bfbfe85ee873   normal   2 days ago   2         Washington D.C.   1.11.8_1547   IKS-RG1   
+user026-cluster   dcfb22a45c8e410e8d6f7a8269c2d0c3   normal   1 day ago    2         Washington D.C.   1.11.8_1547   IKS-RG1   
+user028-cluster   1b3398b985d84e9b8e9544a91d61428a   normal   1 day ago    2         Washington D.C.   1.11.8_1547   IKS-RG1   
+user029-cluster   6d267a184154407d873f0b02159feb84   normal   1 day ago    2         Washington D.C.   1.11.8_1547   IKS-RG1   
+```
+
+Configure your Kubernetes client using this command. This will also configure your Kubernetes client for future login sessions by adding the command into your .bash_profile. Note $USER automatically resolves to the user logged into the terminal environment.
+```
+~$ eval $(ibmcloud ks cluster-config --cluster $USER-cluster --export | tee -a ~/.bash_profile) 
+```
+You should be able to use kubectl to list kubernetes resources. Try getting the list of pods (there should be none yet)
+```
+~$ kubectl get pods
+No resources found.
+```
 
 Once your client is configured, you are ready to deploy your first application, `guestbook`.
 
