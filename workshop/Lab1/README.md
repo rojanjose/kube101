@@ -145,10 +145,11 @@ that has already been built and uploaded to DockerHub under the name
    ```
    
    We can see that our `<public-IP>` is `173.193.99.136`.
-   
+
 6. Now that you have both the address and the port, you can now access the application in the web browser
-   at `<public-IP>:<nodeport>`. In the example case this is `173.193.99.136:31208`.
-   
+   at `<public-IP>:<nodeport>`. In the example case this is `173.193.99.136:31208`. 
+   [Note: Please try it on your mobile device if the network address is blocked. Or run the command `curl <ip:port>`]  
+
 Congratulations, you've now deployed an application to Kubernetes!
 
 When you're all done, you can either use this deployment in the
